@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+pydantic-settings
+python-dotenv
+mysql-connector-python
+GitPython
+fastembed
+qdrant-client
+tree-sitter
+tree-sitter-javascript
+tree-sitter-typescript
+pytest
+httpx
