@@ -25,5 +25,5 @@ Thumbs.db
 .idea/
 
 # Claude contexts
-.AI
-.CLAUDE
+AI.md
+CLAUDE.md

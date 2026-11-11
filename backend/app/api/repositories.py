@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 from app.db import repository as r
 from app.errors import AppError, ImportFailure
-from app.services import importer, indexer, vector_store
+from app.services import analytics, importer, indexer, vector_store
 
 log = logging.getLogger(__name__)
 router = APIRouter(prefix="/api", tags=["repositories"])
@@ -95,3 +95,9 @@ def get_file(file_id: int):
     if not detail:
         raise AppError(404, "file_not_found", "File not found.")
     return detail
+
+
+@router.get("/repositories/{repo_id}/analytics")
+def get_analytics(repo_id: int):
+    _get_or_404(repo_id)
+    return analytics.get_analytics(repo_id)

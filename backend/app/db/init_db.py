@@ -9,11 +9,19 @@ from app.config import ROOT_DIR, settings
 from app.db.connection import get_server_connection
 
 SCHEMA_FILE = ROOT_DIR / "database" / "schema.sql"
+VIEWS_FILE = ROOT_DIR / "database" / "views.sql"
+# Files whose statements contain ';' (BEGIN..END) and are separated by a '$$' line.
+ROUTINE_FILES = [ROOT_DIR / "database" / "procedures.sql", ROOT_DIR / "database" / "triggers.sql"]
 
 
 def split_statements(sql: str) -> list[str]:
     sql = re.sub(r"--[^\n]*", "", sql)  # strip line comments (none contain ';' or quotes)
     return [s.strip() for s in sql.split(";") if s.strip()]
+
+
+def split_routines(sql: str) -> list[str]:
+    sql = re.sub(r"--[^\n]*", "", sql)
+    return [s.strip() for s in re.split(r"^\$\$[ \t]*$", sql, flags=re.M) if s.strip()]
 
 
 def init_db() -> int:
@@ -26,6 +34,9 @@ def init_db() -> int:
         cur.execute(f"CREATE DATABASE IF NOT EXISTS `{db}` CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci")
         cur.execute(f"USE `{db}`")
         stmts = split_statements(SCHEMA_FILE.read_text(encoding="utf-8"))
+        stmts += split_statements(VIEWS_FILE.read_text(encoding="utf-8"))
+        for f in ROUTINE_FILES:
+            stmts += split_routines(f.read_text(encoding="utf-8"))
         for stmt in stmts:
             cur.execute(stmt)
         conn.commit()

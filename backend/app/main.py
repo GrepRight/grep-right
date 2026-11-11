@@ -6,7 +6,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.api import repositories, search
+from app.api import home, repositories, search
 from app.services import vector_store
 from app.config import settings
 from app.db import repository as r
@@ -28,6 +28,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.include_router(home.router)
 app.include_router(repositories.router)
 app.include_router(search.router)
 

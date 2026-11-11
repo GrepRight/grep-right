@@ -27,6 +27,8 @@ export const api = {
   deleteRepository: (id) => request(`/api/repositories/${id}`, { method: "DELETE" }),
   listFiles: (id, path = "") =>
     request(`/api/repositories/${id}/files${path ? `?path=${encodeURIComponent(path)}` : ""}`),
+  getAnalytics: (id) => request(`/api/repositories/${id}/analytics`),
+  getAnalytics: (id) => request(`/api/repositories/${id}/analytics`),
   getFile: (id) => request(`/api/files/${id}`),
   search: ({ query, repo_id, language, limit = 10 }) =>
     request("/api/search", {

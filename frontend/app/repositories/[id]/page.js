@@ -138,6 +138,8 @@ export default function RepositoryPage() {
             Primary language: {repo.primary_language || "—"} · Branch: {repo.default_branch || "—"}
           </div>
 
+          <p><Link href={`/repositories/${id}/analytics`}>View analytics →</Link></p>
+
           <h2>Files</h2>
           <div className="panel tree"><Branch node={tree} depth={0} /></div>
         </>
