@@ -3,7 +3,7 @@
 Read this first every session. Update it at session end and on major decisions.
 
 ## Status
-- **Current phase:** Phase 3 (embeddings + Qdrant + search API) — code written, **45/45 backend tests pass**, real FastEmbed model + Qdrant Cloud smoke-tested. Awaiting user review/approval before Phase 4.
+- **Current phase:** Phase 4 (search UI) — code written, `npm run build` passes; not yet exercised in a browser against the live API. Awaiting user review/approval before Phase 5.
 - **Last updated:** 2026-11-10
 
 ## Project
@@ -55,6 +55,11 @@ Windows 11, Python 3.13.7, Node 22.19.0, npm 11.6.0, MySQL 8.0.46, git 2.53. Qdr
 - Tests: conftest forces `QDRANT_URL=:memory:` + a fake hash embedder (offline, fast); `test_search.py` has 7 tests. Real model + cloud verified by a manual smoke script (temporary collection created then deleted): dim 384, relevant doc ranked first.
 - Model is cached on first use (~130 MB download).
 
+## Done (Phase 4, 2026-11-10)
+- `frontend/app/search/page.js`: query box + repo/language filters (state in URL `?q=&repo=&lang=`), result cards (name, type, language, score, repo, file link, snippet), loading/empty/error states. `lib/api.js` gained `search`. Nav link "Search" in layout.
+- File page highlights/scrolls to `?chunk=<id>` (links from results).
+- Backend unchanged.
+
 ## Decisions (Phase 2)
 - No auth yet: imports are owned by a placeholder `system` admin user (`get_or_create_system_user`). Real auth/roles still TODO.
 - `commits.author_id` stays NULL (git authors are not app users). `commit_files` only for files in the current tree; the oldest commit of the shallow clone gets no stats (would be a fake whole-tree diff).
@@ -68,7 +73,7 @@ Windows 11, Python 3.13.7, Node 22.19.0, npm 11.6.0, MySQL 8.0.46, git 2.53. Qdr
 - `.env` `QDRANT_URL` still has a typo (`https:https://...`); code tolerates it, but please fix it. Do not commit `.env`.
 - Full real import (real model + cloud collection `code_chunks`) not run yet, only the smoke script.
 - `clear_repository_data` (retry of a failed import) does not purge Qdrant yet; search skips orphan vectors.
-- Frontend not yet exercised in a browser against the live API (build only); no search UI yet (Phase 4).
+- Frontend not yet exercised in a browser against the live API (build only).
 - Relational-schema screenshot was cut off after `code_chunks.embedding_ref`; ask if more columns exist.
 
 ## Run commands
@@ -79,8 +84,8 @@ cd frontend && npm run dev                            # UI :3000
 ```
 
 ## Next steps
-1. USER: review Phase 3, fix `.env` URL, then approve Phase 4 (search UI / frontend).
+1. USER: run backend + frontend, import a repo, try search; fix `.env` URL; approve Phase 5.
 2. Later: auth + roles, analytics (Phase 5 SQL), `docs/DATABASE.md`.
 
-## Suggested commit message (Phase 3)
-`feat: Phase 3 — FastEmbed embeddings, Qdrant vector store, semantic search API`
+## Suggested commit message (Phase 4)
+`feat: Phase 4 — semantic search UI with repo/language filters and result linking`

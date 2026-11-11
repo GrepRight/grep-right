@@ -13,6 +13,7 @@ export default function RootLayout({ children }) {
         <header className="topbar">
           <Link href="/" className="brand">GrepRight</Link>
           <span className="tagline">semantic code search</span>
+          <Link href="/search" className="navlink">Search</Link>
         </header>
         <main className="container">{children}</main>
       </body>

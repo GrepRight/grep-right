@@ -1,18 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "../../../lib/api";
 
 export default function FilePage() {
   const { id } = useParams();
+  const highlight = useSearchParams().get("chunk");
   const [file, setFile] = useState(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
     api.getFile(id).then(setFile).catch((e) => setError(e.message));
   }, [id]);
+
+  useEffect(() => {
+    if (!file || !highlight) return;
+    const el = document.getElementById(`chunk-${highlight}`);
+    if (el) el.scrollIntoView({ block: "center" });
+  }, [file, highlight]);
 
   if (error) return <p className="error">{error}</p>;
   if (!file) return <p className="muted">Loading…</p>;
@@ -56,7 +63,7 @@ export default function FilePage() {
       <h2>Code chunks ({file.chunks.length})</h2>
       {file.chunks.length === 0 && <p className="muted">This file type is recorded but not chunked.</p>}
       {file.chunks.map((c) => (
-        <div key={c.chunk_id}>
+        <div key={c.chunk_id} id={`chunk-${c.chunk_id}`} className={String(c.chunk_id) === highlight ? "hit" : undefined}>
           <div className="chunk-head">
             <span className="badge">{c.chunk_type}</span>
             <span className="muted">lines {c.start_line}–{c.end_line}</span>

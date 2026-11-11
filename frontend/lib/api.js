@@ -28,4 +28,14 @@ export const api = {
   listFiles: (id, path = "") =>
     request(`/api/repositories/${id}/files${path ? `?path=${encodeURIComponent(path)}` : ""}`),
   getFile: (id) => request(`/api/files/${id}`),
+  search: ({ query, repo_id, language, limit = 10 }) =>
+    request("/api/search", {
+      method: "POST",
+      body: JSON.stringify({
+        query,
+        limit,
+        ...(repo_id ? { repo_id: Number(repo_id) } : {}),
+        ...(language ? { language } : {}),
+      }),
+    }),
 };
